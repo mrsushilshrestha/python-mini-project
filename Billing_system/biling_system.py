@@ -277,7 +277,7 @@ class Bill_App:
 #==============welcome-bill==============================
     def welcome_bill(self):
         self.txtarea.delete('1.0', END)
-        self.txtarea.insert(END, "\tWelcome Webcode Retail")
+        self.txtarea.insert(END, "\tWelcome Sushil Retail")
         self.txtarea.insert(END, f"\n Bill Number:{self.bill_no.get()}")
         self.txtarea.insert(END, f"\nCustomer Name:{self.c_name.get()}")
         self.txtarea.insert(END, f"\nPhone Number{self.c_phone.get()}")
