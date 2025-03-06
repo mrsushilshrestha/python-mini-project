@@ -4,7 +4,7 @@ print("Number guessing game")
 
 # randint function to generate the
 # random number b/w 1 to 9
-number = random.randint(1, 9)
+number = random.randint(1, 100)
 
 # number of chances to be given
 # to the user to guess the number
@@ -13,7 +13,7 @@ number = random.randint(1, 9)
 # chances are 5
 chances = 0
 
-print("Guess a number (between 1 and 9):")
+print("Guess a number (between 1 and 100):")
 
 # While loop to count the number
 # of chances
