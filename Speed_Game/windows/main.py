@@ -37,7 +37,7 @@ class StartPage(tk.Frame):
         ImagePath = 'halloween.png'
         canv = tk.Canvas(self, width=600, height=500, bg='white')
         canv.pack(side='bottom')
-        self.img = ImageTk.PhotoImage(Image.open(ImagePath).resize((600, 500), Image.ANTIALIAS))
+        self.img = ImageTk.PhotoImage(Image.open(ImagePath).resize((600, 500), Image.Resampling.LANCZOS))
         canv.create_image(0, 0, anchor="nw", image=self.img)
 
         labelFont = tkFont.Font(family="Arial", size=40, weight="bold", slant="italic")
@@ -58,7 +58,7 @@ class CategoryPage(tk.Frame):
         ImagePath = 'halloween.png'
         canv = tk.Canvas(self, width=600, height=500, bg='white')
         canv.pack(side='bottom')
-        self.img = ImageTk.PhotoImage(Image.open(ImagePath).resize((600, 500), Image.ANTIALIAS))
+        self.img = ImageTk.PhotoImage(Image.open(ImagePath).resize((600, 500), Image.Resampling.LANCZOS))
         canv.create_image(0, 0, anchor="nw", image=self.img)
 
         labelFont = tkFont.Font(family="Arial", size=40, weight="bold", slant="italic")
@@ -73,7 +73,7 @@ class CategoryPage(tk.Frame):
                                command=lambda: master.switch_frame(CountryPage))
         canv.create_window((600 // 2), (500 // 2) - 100, window=countryBtn)
 
-        prevBtn = tk.Button(self, text="preve page", foreground="yellow",
+        prevBtn = tk.Button(self, text="prev page", foreground="yellow",
                             width=15, height=1,
                             background="black", font=btnFont, relief="ridge",
                             borderwidth=5, highlightbackground="yellow",
@@ -91,7 +91,7 @@ class CountryPage(tk.Frame):
         filename = random.choice(os.listdir("./images"))
         code = filename.split(".")[0]
 
-        # 엑셀에 없는 이미지일 경우 예외처리
+        # Handle case where image isn't in excel
         while code.upper() not in df.index:
             filename = random.choice(os.listdir("./images"))
             code = filename.split(".")[0]
@@ -106,13 +106,13 @@ class CountryPage(tk.Frame):
         backgroundPath = 'halloween.png'
         canv = tk.Canvas(self, width=600, height=500, bg='white')
         canv.pack()
-        self.img1 = ImageTk.PhotoImage(Image.open(backgroundPath).resize((600, 500), Image.ANTIALIAS))
+        self.img1 = ImageTk.PhotoImage(Image.open(backgroundPath).resize((600, 500), Image.Resampling.LANCZOS))
         canv.create_image(0, 0, anchor="nw", image=self.img1)
 
         titleFont = tkFont.Font(family="Arial", size=40, weight="bold", slant="italic")
         canv.create_text((600 // 2), (500 // 2) - 190, fill="white", text="Country", font=titleFont)
 
-        self.img2 = ImageTk.PhotoImage(Image.open(countryPath).resize((180, 130), Image.ANTIALIAS))
+        self.img2 = ImageTk.PhotoImage(Image.open(countryPath).resize((180, 130), Image.Resampling.LANCZOS))
         country_img = canv.create_image(210, 130, anchor="nw", image=self.img2)
 
         labelFont = tkFont.Font(family="Arial", size=17, slant="italic")
@@ -127,7 +127,7 @@ class CountryPage(tk.Frame):
                               width=10, height=1, font=BtnFont, foreground="yellow",
                               background="black", relief="ridge",
                               activebackground="yellow", activeforeground="black",
-                              command=lambda: self.checkBtn_click(master, input_text.get(), answer, canv,country_img))
+                              command=lambda: self.checkBtn_click(master, input_text.get(), answer, canv, country_img))
         canv.create_window((600 // 2) - 80, (500 // 2) + 140, window=check_btn)
 
         pass_btn = tk.Button(self, text="pass: " + str(pass_count) + "/3",
@@ -169,19 +169,18 @@ class CountryPage(tk.Frame):
         user_text = user_text.upper().replace(" ", "")
         check_answer = check_answer.replace(" ", "")
 
-        if (user_text == check_answer):
+        if user_text == check_answer:
             # correct
             print('맞았습돠')
             ImagePath = 'correct.png'
-            self.img3 = ImageTk.PhotoImage(Image.open(ImagePath).resize((100, 100), Image.ANTIALIAS))
+            self.img3 = ImageTk.PhotoImage(Image.open(ImagePath).resize((100, 100), Image.Resampling.LANCZOS))
             resultImage = canv.create_image(450, 30, anchor="nw", image=self.img3)
             correct_count += 1
         else:
             # wrong
             print('틀렸슴돠')
             ImagePath = 'wrong.png'
-            self.img4 = ImageTk.PhotoImage(Image.open(ImagePath).resize((100, 100), Image.ANTIALIAS))
-
+            self.img4 = ImageTk.PhotoImage(Image.open(ImagePath).resize((100, 100), Image.Resampling.LANCZOS))
             resultImage = canv.create_image(450, 30, anchor="nw", image=self.img4)
 
         # resolve 15 problems
@@ -191,14 +190,14 @@ class CountryPage(tk.Frame):
         filename = random.choice(os.listdir("./images"))
         code = filename.split(".")[0]
 
-        # 엑셀에 없는 이미지일 경우 예외처리
+        # Handle case where image isn't in excel
         while code.upper() not in df.index:
             filename = random.choice(os.listdir("./images"))
             code = filename.split(".")[0]
 
         countryPath = "./images/" + filename
-        canv.after(1000,self.delete_img, canv, check_img)
-        self.img2 = ImageTk.PhotoImage(Image.open(countryPath).resize((180, 130), Image.ANTIALIAS))
+        canv.after(1000, self.delete_img, canv, check_img)
+        self.img2 = ImageTk.PhotoImage(Image.open(countryPath).resize((180, 130), Image.Resampling.LANCZOS))
         country_img = canv.create_image(210, 130, anchor="nw", image=self.img2)
         answer = df["country"][code.upper()]
 
@@ -208,7 +207,7 @@ class CountryPage(tk.Frame):
         global pass_count, pass_window
         global country_img, answer
         pass_count = pass_count - 1
-        if (pass_count < 0):
+        if pass_count < 0:
             print("패스 그만")
             pass_count = 0
             tk.messagebox.showerror('Pass', 'You Don\'t have pass ticket!')
@@ -216,14 +215,14 @@ class CountryPage(tk.Frame):
             filename = random.choice(os.listdir("./images"))
             code = filename.split(".")[0]
 
-            # 엑셀에 없는 이미지일 경우 예외처리
+            # Handle case where image isn't in excel
             while code.upper() not in df.index:
                 filename = random.choice(os.listdir("./images"))
                 code = filename.split(".")[0]
 
             countryPath = "./images/" + filename
             canv.after(1000, self.delete_img, canv, check_img)
-            self.img2 = ImageTk.PhotoImage(Image.open(countryPath).resize((180, 130), Image.ANTIALIAS))
+            self.img2 = ImageTk.PhotoImage(Image.open(countryPath).resize((180, 130), Image.Resampling.LANCZOS))
             country_img = canv.create_image(210, 130, anchor="nw", image=self.img2)
             answer = df["country"][code.upper()]
 
@@ -246,11 +245,11 @@ class FinishPage(tk.Frame):
         ImagePath = 'halloween.png'
         canv = tk.Canvas(self, width=600, height=500, bg='white')
         canv.pack(side='bottom')
-        self.img = ImageTk.PhotoImage(Image.open(ImagePath).resize((600, 500), Image.ANTIALIAS))
+        self.img = ImageTk.PhotoImage(Image.open(ImagePath).resize((600, 500), Image.Resampling.LANCZOS))
         canv.create_image(0, 0, anchor="nw", image=self.img)
 
         labelFont = tkFont.Font(family="Arial", size=40, weight="bold")
-        canv.create_text((600 // 2), (500 // 2) - 50, fill="white", text="total score : " + str(correct_count)+ "/15", font=labelFont)
+        canv.create_text((600 // 2), (500 // 2) - 50, fill="white", text="total score : " + str(correct_count) + "/15", font=labelFont)
         canv.create_text((600 // 2), (500 // 2) + 50, fill="white", text="Good Job!", font=labelFont)
 
 
@@ -270,6 +269,5 @@ if __name__ == "__main__":
 
     app = SampleApp()
     app.title("Speed Game")
-
     app.geometry('600x500+100+100')
     app.mainloop()
